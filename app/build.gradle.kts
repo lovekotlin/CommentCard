@@ -31,6 +31,9 @@ android {
         sourceCompatibility = JavaVersion.VERSION_11
         targetCompatibility = JavaVersion.VERSION_11
     }
+    packaging {
+        resources.excludes += "DebugProbesKt.bin"
+    }
     kotlinOptions {
         jvmTarget = "11"
     }
@@ -40,7 +43,6 @@ android {
 }
 
 dependencies {
-
     implementation(libs.androidx.core.ktx)
     implementation(libs.androidx.lifecycle.runtime.ktx)
     implementation(libs.androidx.activity.compose)
@@ -49,6 +51,20 @@ dependencies {
     implementation(libs.androidx.ui.graphics)
     implementation(libs.androidx.ui.tooling.preview)
     implementation(libs.androidx.material3)
+    implementation(libs.androidx.material3.windowsizeclass)
+
+    // Coroutines dependencies
+    implementation(libs.coroutines.core)
+    implementation(libs.coroutines.android)
+
+    // Date-Time dependencies
+    implementation(libs.datetime)
+
+    // Coil dependencies
+    implementation(libs.coil.compose)
+    implementation(libs.coil.network.okhttp)
+
+    // Tests
     testImplementation(libs.junit)
     androidTestImplementation(libs.androidx.junit)
     androidTestImplementation(libs.androidx.espresso.core)
