@@ -7,6 +7,7 @@ import androidx.compose.foundation.clickable
 import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.Column
+import androidx.compose.foundation.layout.FlowRow
 import androidx.compose.foundation.layout.PaddingValues
 import androidx.compose.foundation.layout.Row
 import androidx.compose.foundation.layout.Spacer
@@ -48,6 +49,7 @@ import androidx.compose.ui.unit.sp
 import androidx.core.net.toUri
 import coil3.compose.AsyncImage
 import com.example.commentcard.ui.comments.model.CommentUIModel
+import com.example.commentcard.ui.theme.CommentCardTheme
 
 /**
  * A composable that displays a comment card with profile image, name, email, and comment body.
@@ -237,28 +239,21 @@ private fun ProfileImageSection(
  */
 @Composable
 private fun UserInfoSection(name: String, email: String) {
-    Column(
-        verticalArrangement = Arrangement.spacedBy(2.dp)
+    FlowRow(
+        horizontalArrangement = Arrangement.spacedBy(8.dp),
+        itemVerticalAlignment = Alignment.CenterVertically
     ) {
         Text(
             text = name,
-            style = MaterialTheme.typography.titleMedium.copy(
-                fontWeight = FontWeight.SemiBold,
-                lineHeight = 20.sp
-            ),
-            color = MaterialTheme.colorScheme.onSurface,
-            maxLines = Int.MAX_VALUE, // Prevent truncation
-            overflow = TextOverflow.Visible
+            style = MaterialTheme.typography.titleMedium,
+            fontWeight = FontWeight.SemiBold,
         )
 
+        // Email Text - No maxLines. It will flow to the next line if the name is long.
         Text(
             text = email,
-            style = MaterialTheme.typography.bodySmall.copy(
-                lineHeight = 16.sp
-            ),
+            style = MaterialTheme.typography.bodySmall,
             color = MaterialTheme.colorScheme.onSurfaceVariant,
-            maxLines = Int.MAX_VALUE, // Prevent truncation
-            overflow = TextOverflow.Visible
         )
     }
 }
@@ -317,7 +312,7 @@ private fun CommentCardPreview() {
             windowWidthSize = WindowWidthSizeClass.Compact,
             comment = CommentUIModel(
                 id = 1,
-                name = "id labore ex et quam laborum",
+                name = "id labore ex et quam laborum asdfasdf asdd fasdf  asddf asd fa sdf asd fa sdf sd fa sdf as df asd f asdf as df asd f asdf as df asd fa sdf asd f asdf a sdf asd f asd f asdf asd f asd fa sdf \n asdf as df asdf as df asd fa sdf asd f sadf\n asdf as df asdf asd f sadf as fdf",
                 email = "Eliseo@gardner.biz",
                 body = "laudantium enim quasi est quidem magnam voluptate ipsam eos\ntempora quo necessitatibus\ndolor quam autem quasi\nreiciendis et nam sapiente accusantium",
                 profileImageUri = Uri.EMPTY
@@ -357,5 +352,21 @@ private fun CommentCardWithImagePreview() {
                 profileImageUri = "https://example.com/profile.jpg".toUri()
             )
         )
+    }
+}
+
+@Preview(name = "Short Name", showBackground = true)
+@Composable
+private fun UserInfoShortNamePreview() {
+    CommentCardTheme {
+        UserInfoSection(name = "John Doe", email = "john.doe@example.com")
+    }
+}
+
+@Preview(name = "Long Name (Wrapping)", showBackground = true)
+@Composable
+private fun UserInfoLongNamePreview() {
+    CommentCardTheme {
+        UserInfoSection(name = "Johnathan Bartholomew Doe The Third", email = "jb.doe.the.third@example.com")
     }
 }
