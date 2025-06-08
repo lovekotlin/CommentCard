@@ -1,6 +1,7 @@
-package com.example.commentcard.ui.components
+package com.example.commentcard.ui.comments.components
 
 import android.content.res.Configuration
+import android.net.Uri
 import androidx.compose.foundation.background
 import androidx.compose.foundation.clickable
 import androidx.compose.foundation.layout.Arrangement
@@ -8,9 +9,12 @@ import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.PaddingValues
 import androidx.compose.foundation.layout.Row
+import androidx.compose.foundation.layout.Spacer
 import androidx.compose.foundation.layout.fillMaxWidth
+import androidx.compose.foundation.layout.height
 import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.layout.size
+import androidx.compose.foundation.layout.width
 import androidx.compose.foundation.shape.CircleShape
 import androidx.compose.foundation.shape.RoundedCornerShape
 import androidx.compose.material.icons.Icons
@@ -41,7 +45,9 @@ import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.Dp
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
+import androidx.core.net.toUri
 import coil3.compose.AsyncImage
+import com.example.commentcard.ui.comments.model.CommentUIModel
 
 /**
  * A composable that displays a comment card with profile image, name, email, and comment body.
@@ -54,7 +60,7 @@ import coil3.compose.AsyncImage
 fun CommentCard(
     modifier: Modifier = Modifier,
     windowWidthSize: WindowWidthSizeClass,
-    comment: Comment,
+    comment: CommentUIModel,
     onProfileImageClick: () -> Unit = {}
 ) {
     // Get current configuration for responsive design
@@ -111,53 +117,77 @@ fun CommentCard(
             containerColor = MaterialTheme.colorScheme.surface
         )
     ) {
-        if (isLandscape) {
-            // Landscape layout: Horizontal arrangement for better screen utilization
-            Row(
-                modifier = Modifier
-                    .fillMaxWidth()
-                    .padding(cardPadding),
-                horizontalArrangement = Arrangement.spacedBy(contentSpacing)
-            ) {
-                ProfileImageSection(
-                    comment = comment,
-                    avatarSize = avatarSize,
-                    onProfileImageClick = onProfileImageClick
-                )
-
-                ContentSection(
-                    comment = comment,
-                    modifier = Modifier.weight(1f),
-                    isCompact = true
-                )
-            }
+        if (isLandscape && windowWidthSize != WindowWidthSizeClass.Compact) {
+            LandscapeLayout(
+                comment = comment,
+                avatarSize = avatarSize,
+                cardPadding = cardPadding,
+                onProfileImageClick = onProfileImageClick
+            )
         } else {
-            // Portrait layout: Vertical arrangement for readability
-            Column(
-                modifier = Modifier
-                    .fillMaxWidth()
-                    .padding(cardPadding),
-                verticalArrangement = Arrangement.spacedBy(contentSpacing)
-            ) {
-                Row(
-                    horizontalArrangement = Arrangement.spacedBy(12.dp),
-                    verticalAlignment = Alignment.CenterVertically
-                ) {
-                    ProfileImageSection(
-                        comment = comment,
-                        avatarSize = avatarSize,
-                        onProfileImageClick = onProfileImageClick
-                    )
+            PortraitLayout(
+                comment = comment,
+                avatarSize = avatarSize,
+                cardPadding = cardPadding,
+                onProfileImageClick = onProfileImageClick
+            )
+        }
+    }
+}
 
-                    UserInfoSection(comment = comment)
-                }
+@Composable
+private fun LandscapeLayout(
+    comment: CommentUIModel,
+    avatarSize: Dp,
+    cardPadding: Dp,
+    onProfileImageClick: () -> Unit
+) {
+    Row(
+        modifier = Modifier
+            .padding(cardPadding)
+            .fillMaxWidth(),
+        verticalAlignment = Alignment.CenterVertically
+    ) {
+        ProfileImageSection(
+            name = comment.name,
+            imageUri = comment.profileImageUri,
+            avatarSize = avatarSize,
+            onProfileImageClick = onProfileImageClick
+        )
+        Spacer(modifier = Modifier.width(16.dp))
+        Column(
+            modifier = Modifier.weight(1f),
+            verticalArrangement = Arrangement.Center
+        ) {
+            UserInfoSection(name = comment.name, email = comment.email)
+            Spacer(Modifier.width(16.dp))
+            ContentSection(comment = comment, isCompact = true)
+        }
+    }
+}
 
-                ContentSection(
-                    comment = comment,
-                    modifier = Modifier.fillMaxWidth(),
-                    isCompact = false
-                )
-            }
+@Composable
+private fun PortraitLayout(
+    comment: CommentUIModel,
+    avatarSize: Dp,
+    cardPadding: Dp,
+    onProfileImageClick: () -> Unit
+) {
+    Row(
+        modifier = Modifier.padding(cardPadding),
+        verticalAlignment = Alignment.Top
+    ) {
+        ProfileImageSection(
+            modifier = Modifier.padding(end = 16.dp),
+            name = comment.name,
+            imageUri = comment.profileImageUri,
+            avatarSize = avatarSize,
+            onProfileImageClick = onProfileImageClick,
+        )
+        Column {
+            UserInfoSection(name = comment.name, email = comment.email)
+            Spacer(Modifier.height(8.dp))
+            ContentSection(comment = comment, isCompact = false)
         }
     }
 }
@@ -167,37 +197,35 @@ fun CommentCard(
  */
 @Composable
 private fun ProfileImageSection(
-    comment: Comment,
+    modifier: Modifier = Modifier,
+    name: String,
+    imageUri: Uri?,
     avatarSize: Dp,
     onProfileImageClick: () -> Unit
 ) {
+    val imageModifier = Modifier
+        .size(avatarSize)
+        .clip(CircleShape)
+        .background(MaterialTheme.colorScheme.primaryContainer, shape = CircleShape)
+        .clickable(onClickLabel = "Change profile picture for $name", onClick = onProfileImageClick)
+        .semantics { contentDescription = "Profile picture for $name" }
+
     Box(
-        modifier = Modifier
-            .size(avatarSize)
-            .clip(CircleShape)
-            .clickable(
-                onClickLabel = "Change profile picture"
-            ) { onProfileImageClick() }
-            .background(
-                color = MaterialTheme.colorScheme.primaryContainer,
-                shape = CircleShape
-            ),
-        contentAlignment = Alignment.Center
+        modifier = modifier, contentAlignment = Alignment.Center
     ) {
-        if (comment.profileImageUri != null) {
-            // Display custom profile image using Coil
+        if (null != imageUri) {
             AsyncImage(
-                model = comment.profileImageUri,
-                contentDescription = "Profile picture of ${comment.name}",
-                modifier = Modifier.size(avatarSize),
+                model = imageUri,
+                contentDescription = null,
+                modifier = imageModifier,
                 contentScale = ContentScale.Crop
             )
         } else {
             // Display default placeholder icon
             Icon(
                 imageVector = Icons.Default.Person,
-                contentDescription = "Default profile picture for ${comment.name}",
-                modifier = Modifier.size(avatarSize * 0.6f),
+                contentDescription = null,
+                modifier = imageModifier.padding(avatarSize * 0.2f),
                 tint = MaterialTheme.colorScheme.onPrimaryContainer
             )
         }
@@ -208,12 +236,12 @@ private fun ProfileImageSection(
  * User information section displaying name and email
  */
 @Composable
-private fun UserInfoSection(comment: Comment) {
+private fun UserInfoSection(name: String, email: String) {
     Column(
         verticalArrangement = Arrangement.spacedBy(2.dp)
     ) {
         Text(
-            text = comment.name,
+            text = name,
             style = MaterialTheme.typography.titleMedium.copy(
                 fontWeight = FontWeight.SemiBold,
                 lineHeight = 20.sp
@@ -224,7 +252,7 @@ private fun UserInfoSection(comment: Comment) {
         )
 
         Text(
-            text = comment.email,
+            text = email,
             style = MaterialTheme.typography.bodySmall.copy(
                 lineHeight = 16.sp
             ),
@@ -240,7 +268,7 @@ private fun UserInfoSection(comment: Comment) {
  */
 @Composable
 private fun ContentSection(
-    comment: Comment,
+    comment: CommentUIModel,
     modifier: Modifier = Modifier,
     isCompact: Boolean = false
 ) {
@@ -287,12 +315,12 @@ private fun CommentCardPreview() {
     MaterialTheme {
         CommentCard(
             windowWidthSize = WindowWidthSizeClass.Compact,
-            comment = Comment(
-                postId = 1,
+            comment = CommentUIModel(
                 id = 1,
                 name = "id labore ex et quam laborum",
                 email = "Eliseo@gardner.biz",
-                body = "laudantium enim quasi est quidem magnam voluptate ipsam eos\ntempora quo necessitatibus\ndolor quam autem quasi\nreiciendis et nam sapiente accusantium"
+                body = "laudantium enim quasi est quidem magnam voluptate ipsam eos\ntempora quo necessitatibus\ndolor quam autem quasi\nreiciendis et nam sapiente accusantium",
+                profileImageUri = Uri.EMPTY
             )
         )
     }
@@ -304,12 +332,12 @@ private fun CommentCardLandscapePreview() {
     MaterialTheme {
         CommentCard(
             windowWidthSize = WindowWidthSizeClass.Compact,
-            comment = Comment(
-                postId = 1,
+            comment = CommentUIModel(
                 id = 2,
                 name = "quo vero reiciendis velit similique earum",
                 email = "Jayne_Kuhic@sydney.com",
-                body = "est natus enim nihil est dolore omnis voluptatem numquam\net omnis occaecati quod ullam at\nvoluptatem error expedita pariatur\nnihil sint nostrum voluptatem reiciendis et"
+                body = "est natus enim nihil est dolore omnis voluptatem numquam\net omnis occaecati quod ullam at\nvoluptatem error expedita pariatur\nnihil sint nostrum voluptatem reiciendis et",
+                profileImageUri = null
             )
         )
     }
@@ -321,13 +349,12 @@ private fun CommentCardWithImagePreview() {
     MaterialTheme {
         CommentCard(
             windowWidthSize = WindowWidthSizeClass.Medium,
-            comment = Comment(
-                postId = 1,
+            comment = CommentUIModel(
                 id = 3,
                 name = "odio adipisci rerum aut animi",
                 email = "Nikita@garfield.biz",
                 body = "quia molestiae reprehenderit quasi aspernatur\\naut expedita occaecati aliquam eveniet laudantium\\nomnis quibusdam delectus saepe quia accusamus maiores nam est\\ncum et ducimus et vero voluptates excepturi deleniti ratione. This is a comment with a custom profile image to demonstrate the image loading functionality.",
-                profileImageUri = "https://example.com/profile.jpg"
+                profileImageUri = "https://example.com/profile.jpg".toUri()
             )
         )
     }

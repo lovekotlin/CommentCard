@@ -15,6 +15,7 @@ retrofit = "3.0.0" # https://github.com/square/retrofit/releases
 moshi = "1.15.2" # https://mvnrepository.com/artifact/com.squareup.moshi/moshi-kotlin
 ksp = "2.1.21-2.0.1" # http://github.com/google/ksp/releases
 hilt = "2.56.2" # https://dagger.dev/hilt/gradle-setup
+hiltNavigationCompose = "1.2.0" # https://mvnrepository.com/artifact/androidx.hilt/hilt-navigation-compose
 
 [libraries]
 androidx-core-ktx = { group = "androidx.core", name = "core-ktx", version.ref = "coreKtx" }
@@ -40,6 +41,7 @@ coroutines-android = { group = "org.jetbrains.kotlinx", name = "kotlinx-coroutin
 # Dependency Injection (Hilt)
 hilt-android = { module = "com.google.dagger:hilt-android", version.ref = "hilt" }
 hilt-compiler = { module = "com.google.dagger:hilt-android-compiler", version.ref = "hilt" }
+hilt-navigation-compose = { module = "androidx.hilt:hilt-navigation-compose", version.ref = "hiltNavigationCompose" }
 
 # Networking (Retrofit & Moshi)
 retrofit = { module = "com.squareup.retrofit2:retrofit", version.ref = "retrofit" }

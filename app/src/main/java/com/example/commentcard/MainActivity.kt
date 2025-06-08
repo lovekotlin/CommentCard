@@ -13,8 +13,7 @@ import androidx.compose.material3.windowsizeclass.calculateWindowSizeClass
 import androidx.compose.runtime.Composable
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.tooling.preview.Preview
-import com.example.commentcard.ui.components.Comment
-import com.example.commentcard.ui.components.CommentCard
+import com.example.commentcard.ui.comments.components.CommentsScreen
 import com.example.commentcard.ui.theme.CommentCardTheme
 
 class MainActivity : ComponentActivity() {
@@ -22,21 +21,14 @@ class MainActivity : ComponentActivity() {
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         enableEdgeToEdge()
+
         setContent {
+            val windowSize = calculateWindowSizeClass(activity = this)
             CommentCardTheme {
                 Scaffold(modifier = Modifier.fillMaxSize()) { innerPadding ->
-                    val windowSize = calculateWindowSizeClass(this)
-                    CommentCard(
+                    CommentsScreen(
                         modifier = Modifier.padding(innerPadding),
-                        windowWidthSize = windowSize.widthSizeClass,
-                        comment = Comment(
-                            postId = 1,
-                            id = 3,
-                            name = "odio adipisci rerum aut animi",
-                            email = "Nikita@garfield.biz",
-                            body = "quia molestiae reprehenderit quasi aspernatur\\naut expedita occaecati aliquam eveniet laudantium\\nomnis quibusdam delectus saepe quia accusamus maiores nam est\\ncum et ducimus et vero voluptates excepturi deleniti ratione. This is a comment with a custom profile image to demonstrate the image loading functionality.",
-                            profileImageUri = "https://example.com/profile.jpg"
-                        ),
+                        widthSizeClass = windowSize.widthSizeClass
                     )
                 }
             }
