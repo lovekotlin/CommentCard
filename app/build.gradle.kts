@@ -2,6 +2,8 @@ plugins {
     alias(libs.plugins.android.application)
     alias(libs.plugins.kotlin.android)
     alias(libs.plugins.kotlin.compose)
+    alias(libs.plugins.hilt.android)
+    alias(libs.plugins.ksp)
 }
 
 android {
@@ -60,9 +62,18 @@ dependencies {
     // Date-Time dependencies
     implementation(libs.datetime)
 
+    // Networking dependencies
+    implementation(libs.retrofit)
+    implementation(libs.retrofit.converter.moshi)
+    implementation(libs.moshi.kotlin)
+
     // Coil dependencies
     implementation(libs.coil.compose)
     implementation(libs.coil.network.okhttp)
+
+    // Hilt dependencies
+    implementation(libs.hilt.android)
+    ksp(libs.hilt.compiler)
 
     // Tests
     testImplementation(libs.junit)
