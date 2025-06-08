@@ -44,18 +44,6 @@ import androidx.compose.ui.unit.sp
 import coil3.compose.AsyncImage
 
 /**
- * Data class representing a comment from the API response
- */
-data class Comment(
-    val postId: Int,
-    val id: Int,
-    val name: String,
-    val email: String,
-    val body: String,
-    val profileImageUri: String? = null // Added for profile image functionality
-)
-
-/**
  * A composable that displays a comment card with profile image, name, email, and comment body.
  *
  * @param comment The comment data to display
