@@ -1,11 +1,18 @@
 package com.example.commentcard.data.repository
 
 import com.example.commentcard.data.model.Comment
+import com.example.commentcard.data.remote.APIException
 import com.example.commentcard.data.remote.APIService
+import com.example.commentcard.data.remote.DataParsingException
+import com.example.commentcard.data.remote.NoConnectivityException
+import com.example.commentcard.data.remote.TimeoutException
+import com.squareup.moshi.JsonDataException
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.flow.Flow
 import kotlinx.coroutines.flow.flow
 import kotlinx.coroutines.flow.flowOn
+import java.io.IOException
+import java.net.SocketTimeoutException
 import javax.inject.Inject
 
 /**
@@ -28,11 +35,17 @@ class CommentsRepository @Inject constructor(private val apiService: APIService)
             if (response.isSuccessful && null != response.body()) {
                 emit(Result.success(response.body()!!))
             } else {
-                emit(Result.failure(RuntimeException("API Error: ${response.message()}")))
+                throw APIException(response.code())
             }
         } catch (e: Exception) {
-            // Catches network exceptions, timeouts etc.
-            emit(Result.failure(e))
+            val resultingException = when (e) {
+                is APIException -> e // Re-throw as is
+                is SocketTimeoutException -> TimeoutException()
+                is IOException -> NoConnectivityException()
+                is JsonDataException -> DataParsingException()
+                else -> e // For any other truly unexpected error
+            }
+            emit(Result.failure(resultingException))
         }
     }.flowOn(Dispatchers.IO)
 }

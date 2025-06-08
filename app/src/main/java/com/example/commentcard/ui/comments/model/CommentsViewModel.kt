@@ -3,6 +3,10 @@ package com.example.commentcard.ui.comments.model
 import android.net.Uri
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
+import com.example.commentcard.data.remote.APIException
+import com.example.commentcard.data.remote.DataParsingException
+import com.example.commentcard.data.remote.NoConnectivityException
+import com.example.commentcard.data.remote.TimeoutException
 import com.example.commentcard.data.repository.CommentsRepository
 import dagger.hilt.android.lifecycle.HiltViewModel
 import kotlinx.coroutines.flow.MutableStateFlow
@@ -45,7 +49,7 @@ class CommentsViewModel @Inject constructor(
      * Fetches comments from the repository and updates the UI state accordingly.
      */
     private fun fetchComments() {
-        _uiState.update { it.copy(isLoading = true) }
+        _uiState.update { it.copy(isLoading = true, error = null) }
 
         repository.getComments()
             .onEach { result ->
@@ -53,15 +57,35 @@ class CommentsViewModel @Inject constructor(
                     _uiState.update {
                         it.copy(
                             isLoading = false,
-                            comments = comments.toUIModel(),
-                            error = null
+                            comments = comments.toUIModel()
                         )
                     }
                 }.onFailure { error ->
                     _uiState.update {
                         it.copy(
                             isLoading = false,
-                            error = error.message ?: "An unknown error occurred."
+                            error = when (error) {
+                                is NoConnectivityException ->
+                                    "No internet connection. Please check your network and try again."
+
+                                is TimeoutException ->
+                                    "The connection timed out. Please try again."
+
+                                is DataParsingException ->
+                                    "An error occurred while processing data. This may be a temporary issue."
+
+                                is APIException ->
+                                    // Handle specific HTTP API error codes
+                                    when (error.code) {
+                                        404 -> "The requested content could not be found."
+                                        401, 403 -> "You don't have permission to access this."
+                                        in 500..599 -> "The server is currently unavailable. Please try again later."
+                                        else -> "Could not retrieve data from the server (Error ${error.code})."
+                                    }
+
+                                else ->
+                                    "An unexpected error occurred. Please try again."
+                            }
                         )
                     }
                 }
