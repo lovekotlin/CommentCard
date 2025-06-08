@@ -30,5 +30,10 @@ class CommentsContract {
          * @param imageUri The URI of the newly selected image.
          */
         data class OnImageSelected(val commentId: Int, val imageUri: Uri) : Event
+
+        /**
+         * Event triggered when the user wants to retry fetching comments.
+         */
+        data object Retry : Event
     }
 }

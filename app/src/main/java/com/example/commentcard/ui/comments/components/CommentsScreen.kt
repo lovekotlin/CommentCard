@@ -9,7 +9,6 @@ import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.foundation.lazy.LazyColumn
 import androidx.compose.foundation.lazy.items
 import androidx.compose.material3.CircularProgressIndicator
-import androidx.compose.material3.Text
 import androidx.compose.material3.windowsizeclass.WindowWidthSizeClass
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.getValue
@@ -52,7 +51,14 @@ fun CommentsScreen(
     Box {
         when {
             uiState.isLoading -> CircularProgressIndicator()
-            uiState.error != null -> Text(text = uiState.error!!)
+
+            uiState.error != null -> {
+                ErrorState(
+                    message = uiState.error!!,
+                    onRetry = { viewModel.onEvent(CommentsContract.Event.Retry) }
+                )
+            }
+
             else -> {
                 LazyColumn(
                     modifier = Modifier.fillMaxSize(),
