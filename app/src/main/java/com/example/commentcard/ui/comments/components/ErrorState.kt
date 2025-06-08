@@ -43,7 +43,7 @@ fun ErrorState(
         )
         Spacer(modifier = Modifier.height(24.dp))
         Button(onClick = onRetry) {
-            Text("Retry")
+            Text(text = "Retry")
         }
     }
 }
