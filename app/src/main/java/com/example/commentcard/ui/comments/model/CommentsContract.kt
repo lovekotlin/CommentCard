@@ -25,25 +25,24 @@ class CommentsContract {
     /**
      * Represents the events (user actions or intents) that can be triggered from the UI.
      */
-    sealed interface Event {
-        /**
-         * Event triggered when the user selects a new profile image for a comment.
-         *
-         * @param commentId The ID of the comment being updated.
-         * @param imageUri The URI of the newly selected image.
-         */
-        data class OnImageSelected(val commentId: Int, val imageUri: Uri) : Event
-
+    sealed class Event {
         /**
          * Event triggered when the user clicks the profile image to initiate an update.
          *
          * @param commentId The ID of the comment whose image is to be changed.
          */
-        data class OnProfileImageClicked(val commentId: Int) : Event
+        data class OnProfileImageClicked(val commentId: Int) : Event()
+
+        /**
+         * Event triggered when the user selects a new profile image for a comment.
+         *
+         * @param imageUri The URI of the newly selected image.
+         */
+        data class OnProfileImageSelected(val imageUri: Uri) : Event()
 
         /**
          * Event triggered when the user wants to retry fetching comments.
          */
-        data object Retry : Event
+        data object Retry : Event()
     }
 }

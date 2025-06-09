@@ -17,9 +17,6 @@ import androidx.compose.material3.TopAppBar
 import androidx.compose.material3.windowsizeclass.WindowWidthSizeClass
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.getValue
-import androidx.compose.runtime.mutableStateOf
-import androidx.compose.runtime.remember
-import androidx.compose.runtime.setValue
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.unit.dp
 import androidx.hilt.navigation.compose.hiltViewModel
@@ -46,7 +43,7 @@ fun CommentsScreen(
         onResult = { uri ->
             val id = uiState.commentIdForImageUpdate
             if (uri != null && id != null) {
-                viewModel.onEvent(CommentsContract.Event.OnImageSelected(id, uri))
+                viewModel.onEvent(CommentsContract.Event.OnProfileImageSelected(uri))
             }
         }
     )

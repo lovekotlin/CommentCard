@@ -15,6 +15,7 @@ import kotlinx.coroutines.flow.asStateFlow
 import kotlinx.coroutines.flow.launchIn
 import kotlinx.coroutines.flow.onEach
 import kotlinx.coroutines.flow.update
+import kotlinx.coroutines.launch
 import javax.inject.Inject
 
 /**
@@ -39,14 +40,16 @@ class CommentsViewModel @Inject constructor(
      * @param event The event to process.
      */
     fun onEvent(event: CommentsContract.Event) {
-        when (event) {
-            is CommentsContract.Event.OnProfileImageClicked ->
-                _uiState.update { it.copy(commentIdForImageUpdate = event.commentId) }
+        viewModelScope.launch {
+            when (event) {
+                is CommentsContract.Event.OnProfileImageClicked ->
+                    _uiState.update { it.copy(commentIdForImageUpdate = event.commentId) }
 
-            is CommentsContract.Event.OnImageSelected ->
-                updateProfileImage(event.commentId, event.imageUri)
+                is CommentsContract.Event.OnProfileImageSelected ->
+                    updateProfileImage(event.imageUri)
 
-            CommentsContract.Event.Retry -> fetchComments()
+                CommentsContract.Event.Retry -> fetchComments()
+            }
         }
     }
 
@@ -100,13 +103,14 @@ class CommentsViewModel @Inject constructor(
 
     /**
      * Updates the profile image for a specific comment in the UI state.
-     * @param commentId The ID of the comment to update.
+     *
      * @param imageUri The new image URI.
      */
-    private fun updateProfileImage(commentId: Int, imageUri: Uri) {
+    private fun updateProfileImage(imageUri: Uri) {
+        val commentIdToUpdate = _uiState.value.commentIdForImageUpdate ?: return
         _uiState.update { currentState ->
             val updatedComments = currentState.comments.map { comment ->
-                if (comment.id == commentId) {
+                if (comment.id == commentIdToUpdate) {
                     comment.copy(profileImageUri = imageUri)
                 } else {
                     comment
