@@ -93,19 +93,6 @@ fun CommentCard(
         )
     }
 
-    val contentSpacing by remember(isLandscape, windowWidthSize) {
-        derivedStateOf {
-            if (isLandscape) {
-                when (windowWidthSize) {
-                    WindowWidthSizeClass.Compact -> 10.dp
-                    else -> 12.dp
-                }
-            } else {
-                16.dp
-            }
-        }
-    }
-
     Card(
         modifier = modifier
             .fillMaxWidth()
