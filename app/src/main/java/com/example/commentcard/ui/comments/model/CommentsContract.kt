@@ -13,11 +13,13 @@ class CommentsContract {
      * @property isLoading True if comments are currently being fetched, false otherwise.
      * @property comments The list of comments to display.
      * @property error A descriptive error message if fetching fails, null otherwise.
+     * @property commentIdForImageUpdate The ID of the comment currently being updated, used to preserve state during config changes.
      */
     data class State(
         val isLoading: Boolean = false,
         val comments: List<CommentUIModel> = emptyList(),
-        val error: String? = null
+        val error: String? = null,
+        val commentIdForImageUpdate: Int? = null
     )
 
     /**
@@ -26,10 +28,18 @@ class CommentsContract {
     sealed interface Event {
         /**
          * Event triggered when the user selects a new profile image for a comment.
+         *
          * @param commentId The ID of the comment being updated.
          * @param imageUri The URI of the newly selected image.
          */
         data class OnImageSelected(val commentId: Int, val imageUri: Uri) : Event
+
+        /**
+         * Event triggered when the user clicks the profile image to initiate an update.
+         *
+         * @param commentId The ID of the comment whose image is to be changed.
+         */
+        data class OnProfileImageClicked(val commentId: Int) : Event
 
         /**
          * Event triggered when the user wants to retry fetching comments.

@@ -40,6 +40,9 @@ class CommentsViewModel @Inject constructor(
      */
     fun onEvent(event: CommentsContract.Event) {
         when (event) {
+            is CommentsContract.Event.OnProfileImageClicked ->
+                _uiState.update { it.copy(commentIdForImageUpdate = event.commentId) }
+
             is CommentsContract.Event.OnImageSelected ->
                 updateProfileImage(event.commentId, event.imageUri)
 
@@ -109,7 +112,7 @@ class CommentsViewModel @Inject constructor(
                     comment
                 }
             }
-            currentState.copy(comments = updatedComments)
+            currentState.copy(comments = updatedComments, commentIdForImageUpdate = null)
         }
     }
 }

@@ -41,14 +41,12 @@ fun CommentsScreen(
     viewModel: CommentsViewModel = hiltViewModel()
 ) {
     val uiState by viewModel.uiState.collectAsStateWithLifecycle()
-    var commentIdToUpdate by remember { mutableStateOf<Int?>(null) }
     val photoPickerLauncher = rememberLauncherForActivityResult(
         contract = ActivityResultContracts.PickVisualMedia(),
         onResult = { uri ->
-            val id = commentIdToUpdate
+            val id = uiState.commentIdForImageUpdate
             if (uri != null && id != null) {
                 viewModel.onEvent(CommentsContract.Event.OnImageSelected(id, uri))
-                commentIdToUpdate = null
             }
         }
     )
@@ -80,7 +78,7 @@ fun CommentsScreen(
                                 comment = comment,
 
                                 onProfileImageClick = {
-                                    commentIdToUpdate = comment.id
+                                    viewModel.onEvent(CommentsContract.Event.OnProfileImageClicked(comment.id))
                                     photoPickerLauncher.launch(
                                         PickVisualMediaRequest(ActivityResultContracts.PickVisualMedia.ImageOnly)
                                     )
