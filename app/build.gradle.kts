@@ -64,6 +64,9 @@ dependencies {
 
     // Networking dependencies
     implementation(libs.retrofit)
+    implementation(platform(libs.okhttp.bom))
+    implementation(libs.okhttp.core)
+    implementation(libs.okhttp.loggingInterceptor)
     implementation(libs.retrofit.converter.moshi)
     implementation(libs.moshi.kotlin)
 

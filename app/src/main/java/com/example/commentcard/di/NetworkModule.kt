@@ -7,6 +7,8 @@ import dagger.Module
 import dagger.Provides
 import dagger.hilt.InstallIn
 import dagger.hilt.components.SingletonComponent
+import okhttp3.OkHttpClient
+import okhttp3.logging.HttpLoggingInterceptor
 import retrofit2.Retrofit
 import retrofit2.converter.moshi.MoshiConverterFactory
 import javax.inject.Singleton
@@ -30,17 +32,40 @@ object NetworkModule {
         .build()
 
     /**
-     * Provides singleton retrofit instance.
-     * @param moshi The Moshi instance for JSON conversion
+     * Provides a singleton instance of OkHttpClient.
      */
-    fun provideRetrofit(moshi: Moshi): Retrofit = Retrofit.Builder()
+    @Provides
+    @Singleton
+    fun provideOkHttpClient(): OkHttpClient {
+        return OkHttpClient.Builder().addInterceptor(
+            HttpLoggingInterceptor().setLevel(
+                HttpLoggingInterceptor.Level.BODY
+            )
+        ).build()
+    }
+
+    /**
+     * Provides singleton retrofit instance.
+     *
+     * @param okHttpClient The singleton OkHttpClient
+     * @param moshi The Moshi instance for JSON conversion
+     * @return A configured Retrofit instance
+     */
+    @Provides
+    @Singleton
+    fun provideRetrofit(okHttpClient: OkHttpClient, moshi: Moshi): Retrofit = Retrofit.Builder()
         .baseUrl(BASE_URL)
+        .client(okHttpClient)
         .addConverterFactory(MoshiConverterFactory.create(moshi))
         .build()
 
     /**
      * Provides singleton instance of APIService.
+     *
      * @param retrofit The Retrofit instance to create the service
+     * @return The Retrofit-generated implementation of APIService.
      */
+    @Provides
+    @Singleton
     fun provideAPIService(retrofit: Retrofit): APIService = retrofit.create(APIService::class.java)
 }
