@@ -149,6 +149,13 @@ private fun LandscapeLayout(
             verticalArrangement = Arrangement.Center
         ) {
             UserInfoSection(name = comment.name, email = comment.email)
+            Spacer(Modifier.height(4.dp))
+            Text(
+                text = "${comment.id}",
+                style = MaterialTheme.typography.labelSmall,
+                color = MaterialTheme.colorScheme.onSurfaceVariant,
+                modifier = Modifier.semantics { contentDescription = "Comment Identifier is ${comment.id}" }
+            )
             Spacer(Modifier.width(16.dp))
             ContentSection(comment = comment, isCompact = true)
         }
@@ -175,6 +182,13 @@ private fun PortraitLayout(
         )
         Column {
             UserInfoSection(name = comment.name, email = comment.email)
+            Spacer(Modifier.height(4.dp))
+            Text(
+                text = "${comment.id}",
+                style = MaterialTheme.typography.labelSmall,
+                color = MaterialTheme.colorScheme.onSurfaceVariant,
+                modifier = Modifier.semantics { contentDescription = "Comment Identifier is ${comment.id}" }
+            )
             Spacer(Modifier.height(8.dp))
             ContentSection(comment = comment, isCompact = false)
         }
