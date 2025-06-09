@@ -2,9 +2,6 @@
 agp = "8.10.1"
 kotlin = "2.1.21"
 coreKtx = "1.16.0"
-junit = "4.13.2"
-junitVersion = "1.2.1"
-espressoCore = "3.6.1"
 lifecycleRuntimeKtx = "2.9.1"
 activityCompose = "1.10.1"
 composeBom = "2025.06.00"
@@ -17,11 +14,15 @@ ksp = "2.1.21-2.0.1" # http://github.com/google/ksp/releases
 hilt = "2.56.2" # https://dagger.dev/hilt/gradle-setup
 hiltNavigationCompose = "1.2.0" # https://mvnrepository.com/artifact/androidx.hilt/hilt-navigation-compose
 
+# Testing dependencies
+junit = "4.13.2"
+junitVersion = "1.2.1"
+espressoCore = "3.6.1"
+mockk = "1.14.2" # https://github.com/mockk/mockk/releases
+turbine = "1.2.0" # https://github.com/cashapp/turbine/releases
+
 [libraries]
 androidx-core-ktx = { group = "androidx.core", name = "core-ktx", version.ref = "coreKtx" }
-junit = { group = "junit", name = "junit", version.ref = "junit" }
-androidx-junit = { group = "androidx.test.ext", name = "junit", version.ref = "junitVersion" }
-androidx-espresso-core = { group = "androidx.test.espresso", name = "espresso-core", version.ref = "espressoCore" }
 androidx-lifecycle-runtime-ktx = { group = "androidx.lifecycle", name = "lifecycle-runtime-ktx", version.ref = "lifecycleRuntimeKtx" }
 androidx-activity-compose = { group = "androidx.activity", name = "activity-compose", version.ref = "activityCompose" }
 androidx-compose-bom = { group = "androidx.compose", name = "compose-bom", version.ref = "composeBom" }
@@ -29,8 +30,6 @@ androidx-ui = { group = "androidx.compose.ui", name = "ui" }
 androidx-ui-graphics = { group = "androidx.compose.ui", name = "ui-graphics" }
 androidx-ui-tooling = { group = "androidx.compose.ui", name = "ui-tooling" }
 androidx-ui-tooling-preview = { group = "androidx.compose.ui", name = "ui-tooling-preview" }
-androidx-ui-test-manifest = { group = "androidx.compose.ui", name = "ui-test-manifest" }
-androidx-ui-test-junit4 = { group = "androidx.compose.ui", name = "ui-test-junit4" }
 androidx-material3 = { group = "androidx.compose.material3", name = "material3" }
 androidx-material3-windowsizeclass = { group = "androidx.compose.material3", name = "material3-window-size-class-android" }
 
@@ -54,6 +53,20 @@ datetime = { group = "org.jetbrains.kotlinx", name = "kotlinx-datetime", version
 # Coil dependencies
 coil-compose = { group = "io.coil-kt.coil3", name = "coil-compose", version.ref = "coil" }
 coil-network-okhttp = { group = "io.coil-kt.coil3", name = "coil-network-okhttp", version.ref = "coil" }
+
+# Testing dependencies
+# Unit tests dependencies
+junit = { module = "junit:junit", version.ref = "junit" }
+mockk = { module = "io.mockk:mockk", version.ref = "mockk" }
+turbine = { module = "app.cash.turbine:turbine", version.ref = "turbine" }
+kotlinx-coroutines-test = { module = "org.jetbrains.kotlinx:kotlinx-coroutines-test", version.ref = "coroutines" }
+hilt-android-testing = { module = "com.google.dagger:hilt-android-testing", version.ref = "hilt" }
+
+# UI & Instrumentation tests
+androidx-junit = { group = "androidx.test.ext", name = "junit", version.ref = "junitVersion" }
+androidx-espresso-core = { group = "androidx.test.espresso", name = "espresso-core", version.ref = "espressoCore" }
+androidx-ui-test-junit4 = { group = "androidx.compose.ui", name = "ui-test-junit4" }
+androidx-ui-test-manifest = { group = "androidx.compose.ui", name = "ui-test-manifest" }
 
 [plugins]
 android-application = { id = "com.android.application", version.ref = "agp" }

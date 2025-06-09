@@ -42,6 +42,7 @@ class CommentsViewModel @Inject constructor(
         when (event) {
             is CommentsContract.Event.OnImageSelected ->
                 updateProfileImage(event.commentId, event.imageUri)
+
             CommentsContract.Event.Retry -> fetchComments()
         }
     }

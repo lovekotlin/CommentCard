@@ -11,6 +11,7 @@ import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.flow.Flow
 import kotlinx.coroutines.flow.flow
 import kotlinx.coroutines.flow.flowOn
+import retrofit2.HttpException
 import java.io.IOException
 import java.net.SocketTimeoutException
 import javax.inject.Inject
@@ -32,14 +33,10 @@ class CommentsRepository @Inject constructor(private val apiService: APIService)
     fun getComments(): Flow<Result<List<Comment>>> = flow {
         try {
             val response = apiService.getComments()
-            if (response.isSuccessful && null != response.body()) {
-                emit(Result.success(response.body()!!))
-            } else {
-                throw APIException(response.code())
-            }
+            emit(Result.success(response))
         } catch (e: Exception) {
             val resultingException = when (e) {
-                is APIException -> e // Re-throw as is
+                is HttpException -> APIException(e.code())
                 is SocketTimeoutException -> TimeoutException()
                 is IOException -> NoConnectivityException()
                 is JsonDataException -> DataParsingException()

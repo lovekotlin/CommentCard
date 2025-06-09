@@ -15,5 +15,5 @@ interface APIService {
      * @return A Retrofit [Response] wrapping a list of [Comment] objects.
      */
     @GET("posts/1/comments")
-    suspend fun getComments(): Response<List<Comment>>
+    suspend fun getComments(): List<Comment>
 }

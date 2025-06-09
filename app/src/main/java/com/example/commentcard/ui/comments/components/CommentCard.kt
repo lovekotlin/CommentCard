@@ -367,6 +367,9 @@ private fun UserInfoShortNamePreview() {
 @Composable
 private fun UserInfoLongNamePreview() {
     CommentCardTheme {
-        UserInfoSection(name = "Johnathan Bartholomew Doe The Third", email = "jb.doe.the.third@example.com")
+        UserInfoSection(
+            name = "Johnathan Bartholomew Doe The Third",
+            email = "jb.doe.the.third@example.com"
+        )
     }
 }
