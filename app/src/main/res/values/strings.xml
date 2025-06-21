@@ -1,3 +1,22 @@
 <resources>
     <string name="app_name">CommentCard</string>
+    <string name="retry">Retry</string>
+    <string name="show_more">Show more</string>
+    <string name="show_less">Show less</string>
+
+    <string name="cd_error_icon">Error Icon</string>
+    <string name="cd_comment_by_user">Comment by %1$s</string>
+    <string name="cd_change_profile_picture">Change profile picture for %1$s</string>
+    <string name="cd_profile_picture">Profile picture for %1$s</string>
+    <string name="cd_comment_identifier">Comment Identifier is %1$d</string>
+
+    <string name="error_icon">Error Icon</string>
+    <string name="error_no_connection">No internet connection. Please check your network and try again.</string>
+    <string name="error_timeout">The connection timed out. Please try again.</string>
+    <string name="error_data_parsing">An error occurred while processing data. This may be a temporary issue.</string>
+    <string name="error_not_found">The requested content could not be found.</string>
+    <string name="error_permission">You don\'t have permission to access this.</string>
+    <string name="error_server">The server is currently unavailable. Please try again later.</string>
+    <string name="error_generic_with_code">Could not retrieve data from the server (Error %1$d).</string>
+    <string name="error_unexpected">An unexpected error occurred. Please try again.</string>
 </resources>

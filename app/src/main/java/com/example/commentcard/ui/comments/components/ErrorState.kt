@@ -16,7 +16,9 @@ import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
+import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.text.style.TextAlign
+import com.example.commentcard.R
 import com.example.commentcard.ui.theme.Dimens
 
 /**
@@ -39,7 +41,7 @@ fun ErrorState(
     ) {
         Icon(
             imageVector = Icons.Default.Warning,
-            contentDescription = "Error Icon",
+            contentDescription = stringResource(R.string.error_icon),
             modifier = Modifier.size(Dimens.ErrorIconSize),
             tint = MaterialTheme.colorScheme.error
         )
@@ -52,7 +54,7 @@ fun ErrorState(
         )
         Spacer(modifier = Modifier.height(Dimens.PaddingExtraExtraLarge))
         Button(onClick = onRetry) {
-            Text(text = "Retry")
+            Text(text = stringResource(R.string.retry))
         }
     }
 }

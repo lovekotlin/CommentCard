@@ -37,6 +37,7 @@ import androidx.compose.ui.Modifier
 import androidx.compose.ui.draw.clip
 import androidx.compose.ui.layout.ContentScale
 import androidx.compose.ui.platform.LocalConfiguration
+import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.semantics.contentDescription
 import androidx.compose.ui.semantics.semantics
 import androidx.compose.ui.text.font.FontWeight
@@ -45,6 +46,7 @@ import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.Dp
 import androidx.core.net.toUri
 import coil3.compose.AsyncImage
+import com.example.commentcard.R
 import com.example.commentcard.ui.comments.model.CommentUIModel
 import com.example.commentcard.ui.theme.CommentCardTheme
 import com.example.commentcard.ui.theme.Dimens
@@ -91,12 +93,14 @@ fun CommentCard(
         )
     }
 
+    val commentByUserContentDescription = stringResource(R.string.cd_comment_by_user, comment.name)
+
     Card(
         modifier = modifier
             .fillMaxWidth()
             .padding(horizontal = Dimens.PaddingLarge, vertical = Dimens.PaddingMedium)
             .semantics {
-                contentDescription = "Comment by ${comment.name}"
+                contentDescription = commentByUserContentDescription
             },
         elevation = CardDefaults.cardElevation(defaultElevation = Dimens.CardElevation),
         shape = RoundedCornerShape(Dimens.CardCornerRadius),
@@ -129,6 +133,7 @@ private fun LandscapeLayout(
     cardPadding: Dp,
     onProfileImageClick: () -> Unit
 ) {
+    val commentIdContentDescription = stringResource(R.string.cd_comment_identifier, comment.id)
     Row(
         modifier = Modifier
             .padding(cardPadding)
@@ -153,7 +158,7 @@ private fun LandscapeLayout(
                 style = MaterialTheme.typography.labelSmall,
                 color = MaterialTheme.colorScheme.onSurfaceVariant,
                 modifier = Modifier.semantics {
-                    contentDescription = "Comment Identifier is ${comment.id}"
+                    contentDescription = commentIdContentDescription
                 }
             )
             Spacer(Modifier.width(Dimens.PaddingLarge))
@@ -169,6 +174,7 @@ private fun PortraitLayout(
     cardPadding: Dp,
     onProfileImageClick: () -> Unit
 ) {
+    val commentIdContentDescription = stringResource(R.string.cd_comment_identifier, comment.id)
     Row(
         modifier = Modifier.padding(cardPadding),
         verticalAlignment = Alignment.Top
@@ -188,7 +194,7 @@ private fun PortraitLayout(
                 style = MaterialTheme.typography.labelSmall,
                 color = MaterialTheme.colorScheme.onSurfaceVariant,
                 modifier = Modifier.semantics {
-                    contentDescription = "Comment Identifier is ${comment.id}"
+                    contentDescription = commentIdContentDescription
                 }
             )
             Spacer(Modifier.height(Dimens.PaddingMedium))
@@ -208,12 +214,14 @@ private fun ProfileImageSection(
     avatarSize: Dp,
     onProfileImageClick: () -> Unit
 ) {
+    val changeImageLabel = stringResource(R.string.cd_change_profile_picture, name)
+    val profilePictureContentDescription = stringResource(R.string.cd_profile_picture, name)
     val imageModifier = Modifier
         .size(avatarSize)
         .clip(CircleShape)
         .background(MaterialTheme.colorScheme.primaryContainer, shape = CircleShape)
-        .clickable(onClickLabel = "Change profile picture for $name", onClick = onProfileImageClick)
-        .semantics { contentDescription = "Profile picture for $name" }
+        .clickable(onClickLabel = changeImageLabel, onClick = onProfileImageClick)
+        .semantics { contentDescription = profilePictureContentDescription }
 
     Box(
         modifier = modifier, contentAlignment = Alignment.Center
@@ -296,7 +304,7 @@ private fun ContentSection(
                 )
             ) {
                 Text(
-                    text = if (isExpanded) "Show less" else "Show more",
+                    text = if (isExpanded) stringResource(R.string.show_less) else stringResource(R.string.show_more),
                     style = MaterialTheme.typography.labelMedium
                 )
             }
