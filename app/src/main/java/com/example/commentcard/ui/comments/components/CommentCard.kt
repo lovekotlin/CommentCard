@@ -43,10 +43,13 @@ import androidx.compose.ui.semantics.semantics
 import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.text.style.TextOverflow
 import androidx.compose.ui.tooling.preview.Preview
+import androidx.compose.ui.tooling.preview.PreviewParameter
 import androidx.compose.ui.unit.Dp
-import androidx.core.net.toUri
 import coil3.compose.AsyncImage
 import com.example.commentcard.R
+import com.example.commentcard.ui.comments.components.previewparameterproviders.CommentPreviewParameterProvider
+import com.example.commentcard.ui.comments.components.previewparameterproviders.UserInfoPreviewProvider
+import com.example.commentcard.ui.comments.components.previewparameterproviders.UserInfoSample
 import com.example.commentcard.ui.comments.model.CommentUIModel
 import com.example.commentcard.ui.theme.CommentCardTheme
 import com.example.commentcard.ui.theme.Dimens
@@ -280,7 +283,8 @@ private fun ContentSection(
     isCompact: Boolean = false
 ) {
     var isExpanded by remember { mutableStateOf(value = false) }
-    val maxLines = if (isCompact && !isExpanded) Constants.COMMENT_COLLAPSED_MAX_LINES else Int.MAX_VALUE
+    val maxLines =
+        if (isCompact && !isExpanded) Constants.COMMENT_COLLAPSED_MAX_LINES else Int.MAX_VALUE
 
     Column(
         modifier = modifier,
@@ -318,71 +322,22 @@ private fun ContentSection(
     name = "Portrait - Dark Theme",
     uiMode = Configuration.UI_MODE_NIGHT_YES
 )
-@Composable
-private fun CommentCardPreview() {
-    MaterialTheme {
-        CommentCard(
-            windowWidthSize = WindowWidthSizeClass.Compact,
-            comment = CommentUIModel(
-                id = 1,
-                name = "id labore ex et quam laborum asdfasdf asdd fasdf  asddf asd fa sdf asd fa sdf sd fa sdf as df asd f asdf as df asd f asdf as df asd fa sdf asd f asdf a sdf asd f asd f asdf asd f asd fa sdf \n asdf as df asdf as df asd fa sdf asd f sadf\n asdf as df asdf asd f sadf as fdf",
-                email = "Eliseo@gardner.biz",
-                body = "laudantium enim quasi est quidem magnam voluptate ipsam eos\ntempora quo necessitatibus\ndolor quam autem quasi\nreiciendis et nam sapiente accusantium",
-                profileImageUri = Uri.EMPTY
-            )
-        )
-    }
-}
-
 @Preview(name = "Landscape", widthDp = 800, heightDp = 400)
 @Composable
-private fun CommentCardLandscapePreview() {
+private fun CommentCardParameterPreview(@PreviewParameter(CommentPreviewParameterProvider::class) comment: CommentUIModel) {
     MaterialTheme {
         CommentCard(
             windowWidthSize = WindowWidthSizeClass.Compact,
-            comment = CommentUIModel(
-                id = 2,
-                name = "quo vero reiciendis velit similique earum",
-                email = "Jayne_Kuhic@sydney.com",
-                body = "est natus enim nihil est dolore omnis voluptatem numquam\net omnis occaecati quod ullam at\nvoluptatem error expedita pariatur\nnihil sint nostrum voluptatem reiciendis et",
-                profileImageUri = null
-            )
-        )
-    }
-}
-
-@Preview(name = "With Custom Profile Image")
-@Composable
-private fun CommentCardWithImagePreview() {
-    MaterialTheme {
-        CommentCard(
-            windowWidthSize = WindowWidthSizeClass.Medium,
-            comment = CommentUIModel(
-                id = 3,
-                name = "odio adipisci rerum aut animi",
-                email = "Nikita@garfield.biz",
-                body = "quia molestiae reprehenderit quasi aspernatur\\naut expedita occaecati aliquam eveniet laudantium\\nomnis quibusdam delectus saepe quia accusamus maiores nam est\\ncum et ducimus et vero voluptates excepturi deleniti ratione. This is a comment with a custom profile image to demonstrate the image loading functionality.",
-                profileImageUri = "https://example.com/profile.jpg".toUri()
-            )
+            comment = comment
         )
     }
 }
 
 @Preview(name = "Short Name", showBackground = true)
-@Composable
-private fun UserInfoShortNamePreview() {
-    CommentCardTheme {
-        UserInfoSection(name = "John Doe", email = "john.doe@example.com")
-    }
-}
-
 @Preview(name = "Long Name (Wrapping)", showBackground = true)
 @Composable
-private fun UserInfoLongNamePreview() {
+private fun UserInfoParameterPreview(@PreviewParameter(UserInfoPreviewProvider::class) userInfo: UserInfoSample) {
     CommentCardTheme {
-        UserInfoSection(
-            name = "Johnathan Bartholomew Doe The Third",
-            email = "jb.doe.the.third@example.com"
-        )
+        UserInfoSection(name = userInfo.name, email = userInfo.email)
     }
 }
