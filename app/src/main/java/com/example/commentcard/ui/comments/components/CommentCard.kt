@@ -50,6 +50,7 @@ import com.example.commentcard.R
 import com.example.commentcard.ui.comments.model.CommentUIModel
 import com.example.commentcard.ui.theme.CommentCardTheme
 import com.example.commentcard.ui.theme.Dimens
+import com.example.commentcard.util.Constants
 
 /**
  * A composable that displays a comment card with profile image, name, email, and comment body.
@@ -148,7 +149,7 @@ private fun LandscapeLayout(
         )
         Spacer(modifier = Modifier.width(Dimens.PaddingLarge))
         Column(
-            modifier = Modifier.weight(1f),
+            modifier = Modifier.weight(Constants.LAYOUT_WEIGHT),
             verticalArrangement = Arrangement.Center
         ) {
             UserInfoSection(name = comment.name, email = comment.email)
@@ -238,7 +239,7 @@ private fun ProfileImageSection(
             Icon(
                 imageVector = Icons.Default.Person,
                 contentDescription = null,
-                modifier = imageModifier.padding(avatarSize * 0.2f),
+                modifier = imageModifier.padding(avatarSize * Constants.AVATAR_ICON_PADDING_PERCENTAGE),
                 tint = MaterialTheme.colorScheme.onPrimaryContainer
             )
         }
@@ -279,7 +280,7 @@ private fun ContentSection(
     isCompact: Boolean = false
 ) {
     var isExpanded by remember { mutableStateOf(value = false) }
-    val maxLines = if (isCompact && !isExpanded) 3 else Int.MAX_VALUE
+    val maxLines = if (isCompact && !isExpanded) Constants.COMMENT_COLLAPSED_MAX_LINES else Int.MAX_VALUE
 
     Column(
         modifier = modifier,
@@ -294,7 +295,7 @@ private fun ContentSection(
         )
 
         // Show expand/collapse button for compact mode
-        if (isCompact && comment.body.length > 150) {
+        if (isCompact && comment.body.length > Constants.COMMENT_EXPAND_CHARACTER_THRESHOLD) {
             TextButton(
                 onClick = { isExpanded = !isExpanded },
                 modifier = Modifier.align(Alignment.End),
