@@ -18,11 +18,11 @@ import androidx.compose.material3.windowsizeclass.WindowWidthSizeClass
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.getValue
 import androidx.compose.ui.Modifier
-import androidx.compose.ui.unit.dp
 import androidx.hilt.navigation.compose.hiltViewModel
 import androidx.lifecycle.compose.collectAsStateWithLifecycle
 import com.example.commentcard.ui.comments.model.CommentsContract
 import com.example.commentcard.ui.comments.model.CommentsViewModel
+import com.example.commentcard.ui.theme.Dimens
 
 /**
  * The main screen that displays the list of comments.
@@ -67,7 +67,7 @@ fun CommentsScreen(
                         modifier = Modifier
                             .fillMaxSize()
                             .padding(innerPadding),
-                        contentPadding = PaddingValues(vertical = 8.dp)
+                        contentPadding = PaddingValues(vertical = Dimens.PaddingMedium)
                     ) {
                         items(items = uiState.comments, key = { it.id }) { comment ->
                             CommentCard(
@@ -75,7 +75,11 @@ fun CommentsScreen(
                                 comment = comment,
 
                                 onProfileImageClick = {
-                                    viewModel.onEvent(CommentsContract.Event.OnProfileImageClicked(comment.id))
+                                    viewModel.onEvent(
+                                        CommentsContract.Event.OnProfileImageClicked(
+                                            comment.id
+                                        )
+                                    )
                                     photoPickerLauncher.launch(
                                         PickVisualMediaRequest(ActivityResultContracts.PickVisualMedia.ImageOnly)
                                     )

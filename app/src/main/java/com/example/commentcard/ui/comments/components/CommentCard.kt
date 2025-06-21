@@ -28,7 +28,6 @@ import androidx.compose.material3.Text
 import androidx.compose.material3.TextButton
 import androidx.compose.material3.windowsizeclass.WindowWidthSizeClass
 import androidx.compose.runtime.Composable
-import androidx.compose.runtime.derivedStateOf
 import androidx.compose.runtime.getValue
 import androidx.compose.runtime.mutableStateOf
 import androidx.compose.runtime.remember
@@ -44,12 +43,11 @@ import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.text.style.TextOverflow
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.Dp
-import androidx.compose.ui.unit.dp
-import androidx.compose.ui.unit.sp
 import androidx.core.net.toUri
 import coil3.compose.AsyncImage
 import com.example.commentcard.ui.comments.model.CommentUIModel
 import com.example.commentcard.ui.theme.CommentCardTheme
+import com.example.commentcard.ui.theme.Dimens
 
 /**
  * A composable that displays a comment card with profile image, name, email, and comment body.
@@ -74,10 +72,10 @@ fun CommentCard(
     val cardPadding by remember(windowWidthSize) {
         mutableStateOf(
             when (windowWidthSize) {
-                WindowWidthSizeClass.Compact -> 16.dp
-                WindowWidthSizeClass.Medium -> 20.dp
-                WindowWidthSizeClass.Expanded -> 24.dp
-                else -> 16.dp
+                WindowWidthSizeClass.Compact -> Dimens.PaddingLarge
+                WindowWidthSizeClass.Medium -> Dimens.PaddingExtraLarge
+                WindowWidthSizeClass.Expanded -> Dimens.PaddingExtraExtraLarge
+                else -> Dimens.PaddingLarge
             }
         )
     }
@@ -85,10 +83,10 @@ fun CommentCard(
     val avatarSize by remember(windowWidthSize) {
         mutableStateOf(
             when (windowWidthSize) {
-                WindowWidthSizeClass.Compact -> 48.dp
-                WindowWidthSizeClass.Medium -> 52.dp
-                WindowWidthSizeClass.Expanded -> 56.dp
-                else -> 40.dp // Consider if this default should align with Compact or be distinct
+                WindowWidthSizeClass.Compact -> Dimens.AvatarSizeCompact
+                WindowWidthSizeClass.Medium -> Dimens.AvatarSizeMedium
+                WindowWidthSizeClass.Expanded -> Dimens.AvatarSizeExpanded
+                else -> Dimens.AvatarSizeDefault // Consider if this default should align with Compact or be distinct
             }
         )
     }
@@ -96,12 +94,12 @@ fun CommentCard(
     Card(
         modifier = modifier
             .fillMaxWidth()
-            .padding(horizontal = 16.dp, vertical = 8.dp)
+            .padding(horizontal = Dimens.PaddingLarge, vertical = Dimens.PaddingMedium)
             .semantics {
                 contentDescription = "Comment by ${comment.name}"
             },
-        elevation = CardDefaults.cardElevation(defaultElevation = 2.dp),
-        shape = RoundedCornerShape(12.dp),
+        elevation = CardDefaults.cardElevation(defaultElevation = Dimens.CardElevation),
+        shape = RoundedCornerShape(Dimens.CardCornerRadius),
         colors = CardDefaults.cardColors(
             containerColor = MaterialTheme.colorScheme.surface
         )
@@ -143,20 +141,22 @@ private fun LandscapeLayout(
             avatarSize = avatarSize,
             onProfileImageClick = onProfileImageClick
         )
-        Spacer(modifier = Modifier.width(16.dp))
+        Spacer(modifier = Modifier.width(Dimens.PaddingLarge))
         Column(
             modifier = Modifier.weight(1f),
             verticalArrangement = Arrangement.Center
         ) {
             UserInfoSection(name = comment.name, email = comment.email)
-            Spacer(Modifier.height(4.dp))
+            Spacer(Modifier.height(Dimens.PaddingSmall))
             Text(
                 text = "${comment.id}",
                 style = MaterialTheme.typography.labelSmall,
                 color = MaterialTheme.colorScheme.onSurfaceVariant,
-                modifier = Modifier.semantics { contentDescription = "Comment Identifier is ${comment.id}" }
+                modifier = Modifier.semantics {
+                    contentDescription = "Comment Identifier is ${comment.id}"
+                }
             )
-            Spacer(Modifier.width(16.dp))
+            Spacer(Modifier.width(Dimens.PaddingLarge))
             ContentSection(comment = comment, isCompact = true)
         }
     }
@@ -174,7 +174,7 @@ private fun PortraitLayout(
         verticalAlignment = Alignment.Top
     ) {
         ProfileImageSection(
-            modifier = Modifier.padding(end = 16.dp),
+            modifier = Modifier.padding(end = Dimens.PaddingLarge),
             name = comment.name,
             imageUri = comment.profileImageUri,
             avatarSize = avatarSize,
@@ -182,14 +182,16 @@ private fun PortraitLayout(
         )
         Column {
             UserInfoSection(name = comment.name, email = comment.email)
-            Spacer(Modifier.height(4.dp))
+            Spacer(Modifier.height(Dimens.PaddingSmall))
             Text(
                 text = "${comment.id}",
                 style = MaterialTheme.typography.labelSmall,
                 color = MaterialTheme.colorScheme.onSurfaceVariant,
-                modifier = Modifier.semantics { contentDescription = "Comment Identifier is ${comment.id}" }
+                modifier = Modifier.semantics {
+                    contentDescription = "Comment Identifier is ${comment.id}"
+                }
             )
-            Spacer(Modifier.height(8.dp))
+            Spacer(Modifier.height(Dimens.PaddingMedium))
             ContentSection(comment = comment, isCompact = false)
         }
     }
@@ -241,7 +243,7 @@ private fun ProfileImageSection(
 @Composable
 private fun UserInfoSection(name: String, email: String) {
     FlowRow(
-        horizontalArrangement = Arrangement.spacedBy(8.dp),
+        horizontalArrangement = Arrangement.spacedBy(Dimens.PaddingMedium),
         itemVerticalAlignment = Alignment.CenterVertically
     ) {
         Text(
@@ -273,12 +275,12 @@ private fun ContentSection(
 
     Column(
         modifier = modifier,
-        verticalArrangement = Arrangement.spacedBy(8.dp)
+        verticalArrangement = Arrangement.spacedBy(Dimens.PaddingMedium)
     ) {
         Text(
             text = comment.body,
             style = MaterialTheme.typography.bodyMedium.copy(
-                lineHeight = 20.sp
+                lineHeight = Dimens.LineHeight
             ),
             color = MaterialTheme.colorScheme.onSurface,
             maxLines = maxLines,
@@ -290,7 +292,10 @@ private fun ContentSection(
             TextButton(
                 onClick = { isExpanded = !isExpanded },
                 modifier = Modifier.align(Alignment.End),
-                contentPadding = PaddingValues(horizontal = 8.dp, vertical = 4.dp)
+                contentPadding = PaddingValues(
+                    horizontal = Dimens.PaddingMedium,
+                    vertical = Dimens.PaddingSmall
+                )
             ) {
                 Text(
                     text = if (isExpanded) "Show less" else "Show more",
