@@ -32,7 +32,7 @@ class CommentsRepository @Inject constructor(private val apiService: APIService)
      */
     fun getComments(): Flow<Result<List<Comment>>> = flow {
         try {
-            val response = apiService.getComments()
+            val response = apiService.getComments(postId = 1)
             emit(Result.success(response))
         } catch (e: Exception) {
             val resultingException = when (e) {
