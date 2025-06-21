@@ -59,7 +59,7 @@ fun CommentsScreen(
 
                 uiState.error != null -> {
                     ErrorState(
-                        message = uiState.error!!,
+                        message = uiState.error?.asString() ?: stringResource(R.string.error_unexpected),
                         onRetry = { viewModel.onEvent(CommentsContract.Event.Retry) }
                     )
                 }

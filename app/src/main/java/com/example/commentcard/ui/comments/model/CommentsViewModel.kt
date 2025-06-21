@@ -3,6 +3,8 @@ package com.example.commentcard.ui.comments.model
 import android.net.Uri
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
+import com.example.commentcard.R
+import com.example.commentcard.data.model.StringResource
 import com.example.commentcard.data.remote.APIException
 import com.example.commentcard.data.remote.DataParsingException
 import com.example.commentcard.data.remote.NoConnectivityException
@@ -74,25 +76,28 @@ class CommentsViewModel @Inject constructor(
                             isLoading = false,
                             error = when (error) {
                                 is NoConnectivityException ->
-                                    "No internet connection. Please check your network and try again."
+                                    StringResource(R.string.error_no_connection)
 
                                 is TimeoutException ->
-                                    "The connection timed out. Please try again."
+                                    StringResource(R.string.error_timeout)
 
                                 is DataParsingException ->
-                                    "An error occurred while processing data. This may be a temporary issue."
+                                    StringResource(R.string.error_data_parsing)
 
                                 is APIException ->
                                     // Handle specific HTTP API error codes
                                     when (error.code) {
-                                        404 -> "The requested content could not be found."
-                                        401, 403 -> "You don't have permission to access this."
-                                        in 500..599 -> "The server is currently unavailable. Please try again later."
-                                        else -> "Could not retrieve data from the server (Error ${error.code})."
+                                        404 -> StringResource(R.string.error_not_found)
+                                        401, 403 -> StringResource(R.string.error_permission)
+                                        in 500..599 -> StringResource(R.string.error_server)
+                                        else -> StringResource(
+                                            R.string.error_generic_with_code,
+                                            listOf(error.code)
+                                        )
                                     }
 
                                 else ->
-                                    "An unexpected error occurred. Please try again."
+                                    StringResource(R.string.error_unexpected)
                             }
                         )
                     }

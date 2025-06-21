@@ -1,6 +1,7 @@
 package com.example.commentcard.ui.comments.model
 
 import android.net.Uri
+import com.example.commentcard.data.model.StringResource
 
 /**
  * Defines the contract between the View and the ViewModel for the comments screen.
@@ -18,7 +19,7 @@ class CommentsContract {
     data class State(
         val isLoading: Boolean = false,
         val comments: List<CommentUIModel> = emptyList(),
-        val error: String? = null,
+        val error: StringResource? = null,
         val commentIdForImageUpdate: Int? = null
     )
 
