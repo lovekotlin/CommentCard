@@ -279,9 +279,7 @@ private fun ContentSection(
     ) {
         Text(
             text = comment.body,
-            style = MaterialTheme.typography.bodyMedium.copy(
-                lineHeight = Dimens.LineHeight
-            ),
+            style = MaterialTheme.typography.bodyMedium,
             color = MaterialTheme.colorScheme.onSurface,
             maxLines = maxLines,
             overflow = if (maxLines != Int.MAX_VALUE) TextOverflow.Ellipsis else TextOverflow.Visible

@@ -1,7 +1,6 @@
 package com.example.commentcard.ui.theme
 
 import androidx.compose.ui.unit.dp
-import androidx.compose.ui.unit.sp
 
 /**
  * Object to hold standard spacing and dimension values for the application.
@@ -27,6 +26,4 @@ object Dimens {
     val AvatarSizeDefault = 40.dp
 
     val ErrorIconSize = 64.dp
-
-    val LineHeight = 20.sp
 }
